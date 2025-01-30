@@ -127,7 +127,7 @@ Model performance is evaluated on the held-out test set using the following metr
 
 ## References
 
-[1] Baumer BS, Matthews GJ. A statistician reads the sports page: There is no avoiding WAR. Chance. 2014 Jul 3;27(3):41-4. [https://doi.org/10.1080/09332480.2014.965630](https://doi.org/10.1080/09332480.2014.965630)
-[2] Todd Rob. MLB-StatsAPI – GitHub Repository. [https://github.com/toddrob99/MLB-StatsAPI](https://github.com/toddrob99/MLB-StatsAPI)
-[3] Baseball-Reference. Baseball-Reference.com WAR Explained. [https://www.baseball-reference.com/about/war_explained.shtml](https://www.baseball-reference.com/about/war_explained.shtml)
-[4] Piper Slowinski. Calculating WAR for Position Players. FanGraphs. 2012 Apr 2. [https://library.fangraphs.com/war/war-position-players/](https://library.fangraphs.com/war/war-position-players/)
+1. Baumer BS, Matthews GJ. A statistician reads the sports page: There is no avoiding WAR. Chance. 2014 Jul 3;27(3):41-4. [https://doi.org/10.1080/09332480.2014.965630](https://doi.org/10.1080/09332480.2014.965630)
+2. Todd Rob. MLB-StatsAPI – GitHub Repository. [https://github.com/toddrob99/MLB-StatsAPI](https://github.com/toddrob99/MLB-StatsAPI)
+3. Baseball-Reference. Baseball-Reference.com WAR Explained. [https://www.baseball-reference.com/about/war_explained.shtml](https://www.baseball-reference.com/about/war_explained.shtml)
+4. Piper Slowinski. Calculating WAR for Position Players. FanGraphs. 2012 Apr 2. [https://library.fangraphs.com/war/war-position-players/](https://library.fangraphs.com/war/war-position-players/)
