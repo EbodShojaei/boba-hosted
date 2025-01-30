@@ -1,0 +1,7 @@
+{
+  "ignores": [
+    "autoprefixer",
+    "postcss",
+    "postcss-load-config"
+  ]
+}
