@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebase.admin";
 import { PlayerMiLB } from "@/types/players";
-import { Query, DocumentData } from "firebase-admin/firestore";
+import { Query, DocumentData, FieldPath } from "firebase-admin/firestore";
 
 const MAX_LIMIT = 100;
 const VALID_SORT_FIELDS = [
@@ -52,11 +52,32 @@ export async function GET(request: Request) {
       queryRef = queryRef.orderBy(sortField, sortOrder);
     }
 
+    // Secondary ordering by document ID to ensure uniqueness
+    queryRef = queryRef.orderBy(FieldPath.documentId(), sortOrder);
+
     if (cursor) {
-      const cursorValue = ["rank", "stat.mWar"].includes(sortField)
-        ? parseFloat(cursor)
-        : cursor;
-      queryRef = queryRef.startAfter(cursorValue);
+      let cursorObj;
+      try {
+        cursorObj = JSON.parse(cursor);
+        if (
+          typeof cursorObj !== "object" ||
+          cursorObj === null ||
+          !("value" in cursorObj) ||
+          !("id" in cursorObj)
+        ) {
+          throw new Error("Invalid cursor structure");
+        }
+      } catch {
+        return NextResponse.json(
+          { error: "Invalid cursor format" },
+          { status: 400 },
+        );
+      }
+
+      const { value, id } = cursorObj;
+
+      // Apply cursor for pagination
+      queryRef = queryRef.startAfter(value, id);
     }
 
     // Add timeout protection
@@ -75,24 +96,32 @@ export async function GET(request: Request) {
       ...doc.data(),
     })) as PlayerMiLB[];
 
-    let nextCursor: string | number | null = null;
+    let nextCursor: string | null = null;
     if (docs.length > limit) {
       const lastDoc = docs.pop()!;
-      nextCursor = sortField.includes(".")
+      const sortFieldValue = sortField.includes(".")
         ? getNestedValue(lastDoc, sortField)
         : lastDoc[sortField as keyof PlayerMiLB];
+
+      nextCursor = JSON.stringify({
+        value: sortFieldValue,
+        id: lastDoc.id,
+      });
     }
 
     return NextResponse.json({
       data: docs,
-      nextCursor: nextCursor?.toString() || null,
+      nextCursor: nextCursor,
     });
   } catch (error) {
     console.error("API Error:", error);
     return NextResponse.json(
       {
-        error:
-          error instanceof Error ? error.message : "Unknown error occurred",
+        error: {
+          message:
+            error instanceof Error ? error.message : "Unknown error occurred",
+          code: error instanceof Error ? error.name : "UNKNOWN_ERROR",
+        },
       },
       { status: 500 },
     );

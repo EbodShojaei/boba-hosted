@@ -73,11 +73,29 @@ function storePlayers(
       key,
       JSON.stringify({
         sortedIDs: fetchedPlayers.map((p) => p.id),
-        nextCursor: nextCursorVal,
+        nextCursor: nextCursorVal, // This should already be a JSON string or null
       }),
     );
   } catch (error) {
     console.warn("Cache storage failed:", error);
+  }
+}
+
+/**
+ * Evict cache entries from localStorage, keeping only the specified keys.
+ * @param keysToKeep Array of cache keys that should be retained.
+ */
+function evictCache(keysToKeep: string[]) {
+  try {
+    const prefix = "mlb_"; // Prefix used in makeCacheKey
+    const keys = Object.keys(localStorage);
+    keys.forEach((key) => {
+      if (key.startsWith(prefix) && !keysToKeep.includes(key)) {
+        localStorage.removeItem(key);
+      }
+    });
+  } catch (error) {
+    console.warn("Cache eviction failed:", error);
   }
 }
 
@@ -100,6 +118,50 @@ export function useMlbPlayers() {
 
   const limit = 30;
 
+  /**
+   * Prefetch a page given its cursor.
+   * @param cursor The cursor for the page to prefetch.
+   */
+  async function prefetchPage(cursor: string | null) {
+    if (!cursor) return;
+
+    const prefetchKey = makeCacheKey(cursor, sortField, sortOrder);
+
+    // Check if the page is already cached
+    if (retrieveFromCache(prefetchKey)) {
+      return; // Already cached, no need to prefetch
+    }
+
+    try {
+      const params = new URLSearchParams({
+        limit: Math.min(limit, MAX_LIMIT).toString(),
+        sortField,
+        sortOrder,
+        cursor: cursor, // Pass the composite cursor as a JSON string
+      });
+
+      const res = await fetch(`/api/players/mlb?${params}`);
+      const result = await res.json();
+
+      if (res.ok) {
+        storePlayers(
+          result.data,
+          cursor,
+          sortField,
+          sortOrder,
+          result.nextCursor, // This should be a JSON string or null
+        );
+      } else {
+        console.error("Server error prefetching MLB players:", result);
+      }
+    } catch (error) {
+      console.error("Network error prefetching MLB players:", error);
+    }
+  }
+
+  /**
+   * Load players for the current page and prefetch the next and previous pages.
+   */
   async function loadPlayers() {
     setLoading(true);
 
@@ -110,6 +172,18 @@ export function useMlbPlayers() {
       setPlayers(cached.players);
       setNextCursor(cached.nextCursor);
       setLoading(false);
+
+      // Pre-fetch the next page if nextCursor exists
+      if (cached.nextCursor) {
+        prefetchPage(cached.nextCursor);
+      }
+
+      // Pre-fetch the previous page if there is a previous cursor
+      if (cursorHistory.length > 0) {
+        const previousCursor = cursorHistory[cursorHistory.length - 1] || null;
+        prefetchPage(previousCursor);
+      }
+
       return;
     }
 
@@ -139,6 +213,18 @@ export function useMlbPlayers() {
           sortOrder,
           result.nextCursor,
         );
+
+        // Pre-fetch the next page if nextCursor exists
+        if (result.nextCursor) {
+          prefetchPage(result.nextCursor);
+        }
+
+        // Pre-fetch the previous page if there is a previous cursor
+        if (cursorHistory.length > 0) {
+          const previousCursor =
+            cursorHistory[cursorHistory.length - 1] || null;
+          prefetchPage(previousCursor);
+        }
       } else {
         console.error("Server error fetching MLB players:", result);
       }
@@ -148,6 +234,32 @@ export function useMlbPlayers() {
       setLoading(false);
     }
   }
+
+  /**
+   * Evict cache entries, keeping only the current, previous, and next pages.
+   */
+  useEffect(() => {
+    // Determine the previous cursor
+    const previousCursor =
+      cursorHistory.length > 0 ? cursorHistory[cursorHistory.length - 1] : null;
+    const previousCacheKey = makeCacheKey(previousCursor, sortField, sortOrder);
+
+    // Determine the current cache key
+    const currentCacheKey = makeCacheKey(currentCursor, sortField, sortOrder);
+
+    // Determine the next cache key
+    const nextCacheKey = nextCursor
+      ? makeCacheKey(nextCursor, sortField, sortOrder)
+      : null;
+
+    // Compile keys to keep
+    const keysToKeep = [currentCacheKey];
+    if (previousCacheKey) keysToKeep.push(previousCacheKey);
+    if (nextCacheKey) keysToKeep.push(nextCacheKey);
+
+    // Evict other cache entries
+    evictCache(keysToKeep);
+  }, [currentCursor, sortField, sortOrder, nextCursor, cursorHistory]);
 
   // Re-run fetch logic whenever cursor or sort changes
   useEffect(() => {
