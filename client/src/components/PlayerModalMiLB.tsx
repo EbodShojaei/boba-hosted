@@ -56,12 +56,8 @@ export default function PlayerModalMiLB({
 
         <div className="px-4 rounded-md">
           <div className="flex items-center justify-center mb-4 gap-2">
-            <span className="text-2xl font-bold text-gray-800">
-              #{player.rank}
-            </span>
-            <h2 className="text-2xl font-bold text-gray-900">
-              {player.fullName}
-            </h2>
+            <span className="text-2xl font-bold">#{player.rank}</span>
+            <h2 className="text-2xl font-bold">{player.fullName}</h2>
           </div>
 
           <div className="flex items-center justify-center mb-6">
