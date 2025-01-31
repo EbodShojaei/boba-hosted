@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
+
 import "./globals.css";
 
 import { ThemeProvider } from "@/components/shared/Providers";
@@ -48,6 +50,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <GoogleAnalytics />
+        <Analytics />
         <CookieConsentBanner />
         <ThemeProvider
           attribute="class"
