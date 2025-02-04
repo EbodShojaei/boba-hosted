@@ -92,13 +92,13 @@ export default function PlayerModalMiLB({
               <strong>Shutouts:</strong> {player.stat.shutouts}
             </p>
             <p>
-              <strong>bWAR:</strong> {player.stat.mWar}
+              <strong>bWAR:</strong> {player.stat.mWar.toFixed(2)}
             </p>
             {mWarChange !== null && (
               <p>
                 <strong>bWAR Change:</strong>{" "}
                 <span className={`${trendColor} font-semibold`}>
-                  {trendIcon} {mWarChange}
+                  {trendIcon} {mWarChange.toFixed(2)}
                 </span>
               </p>
             )}
