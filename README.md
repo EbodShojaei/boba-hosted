@@ -1,6 +1,6 @@
-# Boba | Discover 2025 MiLB Prospects with 97% Accuracy
+# Boba | Discover 2025 MiLB Prospects with 98% Accuracy
 
-Boba is a Next.js application that helps users discover Minor League Baseball (MiLB) prospects using a machine learning model with 97% predictive accuracy (R²). It provides a user-friendly interface to explore the most recent 2025 MiLB prospect pool, offering detailed prospect profiles and rankings. The app leverages Next.js, Firebase, and Tailwind CSS for a modern and efficient experience.
+Boba is a Next.js application that helps users discover Minor League Baseball (MiLB) prospects using a machine learning model with 98% predictive accuracy (R²). It provides a user-friendly interface to explore the most recent 2025 MiLB prospect pool, offering detailed prospect profiles and rankings. The app leverages Next.js, Firebase, and Tailwind CSS for a modern and efficient experience.
 
 ![bWAR Histogram](ml/bwar_histogram.jpg)
 
@@ -30,9 +30,9 @@ Boba is a Next.js application that helps users discover Minor League Baseball (M
 
 ## Data and Methodology
 
-Data is sourced from the [MLB Stats API](https://statsapi.mlb.com/). Our proprietary machine learning model (H2O.ai Stacked Ensemble) was trained on over 6,000 players and rigorously tested on over 1,500 players from the 2015 to 2024 seasons.  This model predicts WAR (Wins Above Replacement), which we name "bWAR" (Boba Wins Above Replacement), for over 600 available 2025 prospects.
+Data is sourced from the [MLB Stats API](https://statsapi.mlb.com/). Our proprietary machine learning model (Vertex AI) was trained on over 6,000 players and rigorously tested on over 1,500 players from the 2015 to 2024 seasons.  This model predicts WAR (Wins Above Replacement), which we name "bWAR" (Boba Wins Above Replacement), for over 600 available 2025 prospects.
 
-Our "WAR Machine" achieves 97% accuracy (R²) in predicting MiLB prospect WAR based on testing. Error rates were calculated using a modified Symmetric Mean Absolute Percentage Error (sMAPE) for two values, indicating both magnitude and direction within a range of -100% to 100% (0% sMAPE is perfect accuracy).  Change in bWAR was calculated for players with available 2023 data to indicate growth or decline.
+Our "WAR Machine" achieves 98% accuracy (R²) in predicting MiLB prospect WAR based on testing. Error rates were calculated using a modified Symmetric Mean Absolute Percentage Error (sMAPE) for two values, indicating both magnitude and direction within a range of -100% to 100% (0% sMAPE is perfect accuracy).  Change in bWAR was calculated for players with available 2023 data to indicate growth or decline.
 
 The model training process included:
 
@@ -41,7 +41,7 @@ The model training process included:
 3. Data Cleaning
 4. Missing Value Imputation
 5. Feature Scaling
-6. Model Training (using H2O.ai AutoML)
+6. Model Training (using Vertex AI AutoML)
 7. Model Evaluation
 8. Prediction on 2024 MiLB data
 9. Model Saving

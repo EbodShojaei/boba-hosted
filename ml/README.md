@@ -2,7 +2,7 @@
 
 This document outlines the process for training a machine learning (ML) model to predict Minor League Baseball (MiLB) pitcher Wins Above Replacement (WAR) for the 2025 season, based on 2024 performance data. This project was developed for the 2025 Google X MLB Hackathon.
 
-Our WAR machine (H2O.ai Stacked Ensemble) achieves an impressive 97% accuracy (R²) in predicting MiLB prospects, based on our testing results.
+Our WAR machine (Vertex AI AutoML) achieves an impressive 98% accuracy (R²) in predicting MiLB prospects, based on our testing results.
 
 ![bWAR Histogram](bwar_histogram.jpg)
 
@@ -14,16 +14,17 @@ We leverage sabermetrics, the statistical analysis of baseball data, to predict 
 
 ## Methodology
 
-We utilized H2O.ai, an open-source, scalable machine learning platform, for model training and prediction. H2O.ai's AutoML capabilities streamline the process of training and tuning multiple models.
+We utilized Vertex AI, Google's scalable machine learning platform, for model training and prediction. Vertex AI's AutoML capabilities streamline the process of training and tuning multiple models.
 
 ### Models
 
-We trained and compared the following H2O.ai regressor models:
+We trained and compared the following Vertex AI and H2O.ai regressor models:
 
 ## Model Performance Comparison
 
 | Model         | RMSE  | MAE  | R²   | Training Time (s) | Inference Time (s) |
 |------------------------|--------|--------|--------|------------------|------------------|
+| Vertex AI AutoML | -- | -- | 0.975 | 1403.0 | -- |
 | H2O Stacked Ensemble | 0.186 | 0.115 | 0.969 | 1156.08     | 0.312      |
 | H2O GBM        | 0.222 | 0.135 | 0.956 | 534.10      | 0.593      |
 | H2O DRF        | 0.233 | 0.143 | 0.951 | 784.67      | 0.218      |
@@ -36,7 +37,7 @@ The training process involved the following steps:
 3. Data Cleaning
 4. Missing Value Imputation
 5. Feature Scaling
-6. Model Training (using H2O.ai AutoML)
+6. Model Training (using Vertex AI and H2O.ai AutoML)
 7. Model Evaluation
 8. Prediction on 2024 MiLB data
 9. Model Saving
@@ -58,7 +59,7 @@ Due to time constraints, we excluded hitting and fielding data. While metrics li
 
 ### Model Training
 
-Models are trained using H2O.ai's AutoML feature with a maximum of 10 models. Features consist of various pitching statistics (e.g., games played, innings pitched, strikeouts). The target variable is WAR.
+Models are trained using Vertex AI and H2O.ai AutoML platforms. Features consist of various pitching statistics (e.g., games played, innings pitched, strikeouts). The target variable is WAR.
 
 #### Feature and Target Variable Summary
 

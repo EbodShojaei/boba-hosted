@@ -20,7 +20,7 @@ export default function About() {
             WAR
           </a>{" "}
           metric to determine the accuracy of our WAR machine based on MLB
-          pitcher data. The histogram below shows this accuracy (R² = 97%).
+          pitcher data. The histogram below shows this accuracy (R² = 98%).
         </p>
         <Image
           src="/bwar_histogram.jpg"
