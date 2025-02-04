@@ -74,6 +74,9 @@ export default function PlayerModalMiLB({
 
           <div className="space-y-2 text-sm">
             <p>
+              <strong>Born:</strong> {player.birthDate}
+            </p>
+            <p>
               <strong>Games Played:</strong> {player.stat.gamesPlayed}
             </p>
             <p>
